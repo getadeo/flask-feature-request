@@ -10,8 +10,7 @@ class FeatureRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False,
-        default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'),
         nullable=False)
     client = db.relationship('Client',
@@ -28,6 +27,7 @@ class Client(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, name):
         self.name = name
@@ -40,6 +40,7 @@ class ProductArea(db.Model):
     __tablename__ = 'product_areas'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, name):
         self.name = name
