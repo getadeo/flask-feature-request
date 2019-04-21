@@ -29,6 +29,9 @@ class Client(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
 
+    def __init__(self, name):
+        self.name = name
+
     def to_str(self):
         return self.name
 
@@ -37,6 +40,9 @@ class ProductArea(db.Model):
     __tablename__ = 'product_areas'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
+
+    def __init__(self, name):
+        self.name = name
 
     def to_str(self):
         return self.name
