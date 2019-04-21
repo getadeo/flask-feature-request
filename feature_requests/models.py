@@ -3,9 +3,6 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-def init_app(app, **kwargs):
-    db.init_app(app)
-
 class FeatureRequest(db.Model):
 
     __tablename__ = 'feature_requests'
@@ -15,12 +12,12 @@ class FeatureRequest(db.Model):
     description = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False,
         default=datetime.utcnow)
-    client_id = db.Column(db.Integer, db.ForeignKey('client.id'),
+    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'),
         nullable=False)
     client = db.relationship('Client',
         backref=db.backref('feature_requests', lazy=True))
 
-    product_area_id = db.Column(db.Integer, db.ForeignKey('product_area.id'),
+    product_area_id = db.Column(db.Integer, db.ForeignKey('product_areas.id'),
         nullable=False)
     product_area = db.relationship('ProductArea',
         backref=db.backref('feature_requests', lazy=True))

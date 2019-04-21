@@ -1,7 +1,8 @@
+from feature_requests import api, web, config
+from feature_requests.models import db
+
 from flask import Flask
-from feature_requests import api, web
-from feature_requests import models
-from feature_requests import config
+from flask_migrate import Migrate
 
 def create_app():
     app = Flask(__name__)
@@ -15,7 +16,7 @@ def create_app():
 
     app.config.from_object(config)
 
-
-    models.init_app(app)
+    db.init_app(app)
+    migrate = Migrate(app, db)
 
     return app
