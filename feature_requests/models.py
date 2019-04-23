@@ -20,6 +20,7 @@ class FeatureRequest(db.Model):
         nullable=False)
     product_area = db.relationship('ProductArea',
         backref=db.backref('feature_requests', lazy=True))
+        
 
 class Client(db.Model):
 
@@ -32,7 +33,10 @@ class Client(db.Model):
     def __init__(self, name):
         self.name = name
 
-    def to_str(self):
+    def __repr__(self):
+        return f"<Client {self.name}>"
+
+    def __str__(self):
         return self.name
 
 class ProductArea(db.Model):
@@ -45,6 +49,9 @@ class ProductArea(db.Model):
     def __init__(self, name):
         self.name = name
 
-    def to_str(self):
+    def __repr__(self):
+        return f"<ProductArea {self.name}>"
+
+    def __str__(self):
         return self.name
 

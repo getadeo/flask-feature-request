@@ -10,6 +10,10 @@ flask = "*"
 flask-sqlalchemy = "*"
 python-dotenv = "*"
 flask-migrate = "*"
+flask-testing = "*"
+gunicorn = "*"
+eventlet = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"

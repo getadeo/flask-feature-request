@@ -1,3 +1,5 @@
+import unittest
+
 from flask_script import Manager
 
 from feature_requests import create_app
@@ -23,6 +25,17 @@ def seed():
     db.session.commit()
 
     return 'Database seeded'
+
+
+@manager.command
+def test():
+    tests = unittest.TestLoader().discover('tests', pattern='*.py')
+    result = unittest.TextTestRunner(verbosity=2).run(tests)
+
+    if result.wasSuccessful():
+        return 0
+    else:
+        return 1
 
 
 if __name__ == "__main__":

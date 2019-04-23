@@ -1,3 +1,4 @@
 *.pyc
 *.swp
 .vscode/
+feature_requests/db/test.db
