@@ -38,11 +38,15 @@ class FeatureRequestTestAPI(LiveServerTestCase):
         db.session.remove()
         db.drop_all()
 
-    def test_api_root_endpoint(self):
+    def test_api_root_endpoint_successful(self):
 
         r = requests.get(self.get_server_url() + "/api")
 
-        self.assertEqual(r.status_code, 200, "Root API Endpoint Should Response 200 Status Code")
+        self.assertEqual(
+            r.status_code,
+            200,
+            "Root API Endpoint Should Response 200 Status Code"
+        )
 
 
 if __name__ == '__main__':

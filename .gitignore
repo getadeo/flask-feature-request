@@ -1,4 +1,5 @@
 *.pyc
 *.swp
 .vscode/
+Pipfile.lock
 feature_requests/db/test.db
