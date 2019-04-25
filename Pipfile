@@ -14,6 +14,7 @@ flask-testing = "*"
 gunicorn = "*"
 eventlet = "*"
 requests = "*"
+flask-script = "*"
 
 [requires]
 python_version = "3.7"
