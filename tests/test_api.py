@@ -179,26 +179,101 @@ class FeatureRequestTestAPI(LiveServerTestCase):
                 " be equal to fixture title payload"
         )
 
-def test_api_feature_requests_get_via_id_not_found(self):
+    def test_api_feature_requests_get_via_id_not_found(self):
+
+            endpoint = self.get_server_url() + "/api/feature_requests"
+
+            get_fr = requests.get(endpoint + "/100")
+
+            fr_data = get_fr.json()
+
+            self.assertEqual(
+                get_fr.status_code,
+                404,
+                "Feature Request via ID should return 404"
+            )
+
+            self.assertEqual(
+                fr_data['message'],
+                "Feature Request not found",
+                "Error message should be 'Feature Request not found'"
+            )
+
+    def test_api_feature_requests_patch_via_id(self):
 
         endpoint = self.get_server_url() + "/api/feature_requests"
 
-        get_fr = requests.get(endpoint + "/100")
+        existing_payload = {
+            "title": "Test Title 1",
+            "description": "Test Description 1",
+            "priority": 1,
+            "client_id": 1,
+            "target_date": "2019-04-28",
+            "product_area_id": 1
 
-        fr_data = get_fr.json()
+        }
+
+        r = requests.post(endpoint, json=existing_payload)
+
+        update_payload = {
+            "title": "Updated Test Title 1",
+            "description": "Updated Test Description 1",
+            "priority": 2,
+            "client_id": 3,
+            "target_date": "2019-04-28",
+            "product_area_id": 1
+        }
+
+        response_data = r.json()['featureRequestData']
+
+        r2 = requests.patch(
+            endpoint + "/" + str(response_data['id']),
+            json=update_payload
+        )
+
+        updated_response_data = r2.json()['featureRequestData']
 
         self.assertEqual(
-            get_fr.status_code,
+            updated_response_data['title'],
+            update_payload['title'],
+            f"Updated feature request should be equal to " \
+                " '{update_payload['title']}'"
+        )
+
+        self.assertEqual(
+            r2.status_code,
+            200,
+            "Update feature request should return 200"
+        )
+
+    def test_api_feature_requests_patch_via_id_not_found(self):
+
+        endpoint = self.get_server_url() + "/api/feature_requests"
+
+        payload = {
+            "title": "Test Title 1",
+            "description": "Test Description 1",
+            "priority": 1,
+            "client_id": 1,
+            "target_date": "2019-04-28",
+            "product_area_id": 1
+
+        }
+
+        r = requests.patch(endpoint + "/100", json=payload)
+
+        self.assertEqual(
+            r.status_code,
             404,
             "Feature Request via ID should return 404"
         )
 
         self.assertEqual(
-            fr_data['featureRequestData']['title'],
-            payload['title'],
-            "Feature Request response message should" \
-                "return 'Feature Request not found'"
+            r.json()['message'],
+            "Feature Request not found",
+            "Error message should be 'Feature Request not found'"
         )
+
 
 if __name__ == '__main__':
     unittest.main()

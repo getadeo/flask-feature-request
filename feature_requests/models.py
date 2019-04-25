@@ -62,6 +62,11 @@ class FeatureRequest(db.Model):
         # * Query Feature to be updated
         fr = cls.query.filter_by(id=fr_id_to_update).first()
 
+        print(fr_id_to_update)
+
+        if fr is None:
+            return None
+
         # * Query other existing feature request
         fr_exist = cls.query
         fr_exist = fr_exist.filter_by(

@@ -301,6 +301,17 @@ class FeatureRequestTestModels(TestCase):
 
             f1 = FeatureRequest.edit(**updated_feature_data_1)
 
+            not_existing_feature_data = {
+                "id": 100,
+                "title": "Not existing Test 1",
+                "description": "Not existing Test 1 Description",
+                "client_id": 1,
+                "priority": 1,
+                "product_area_id": 2
+            }
+
+            nef = FeatureRequest.edit(**not_existing_feature_data)
+
             self.assertEqual(
                 f1.title,
                 updated_feature_data_1['title'],
@@ -313,6 +324,11 @@ class FeatureRequestTestModels(TestCase):
                 f"Description should be {updated_feature_data_1['description']}"
             )
 
+            self.assertEqual(
+                nef,
+                None,
+                "Non-existing feature should return None",
+            )
 
     def test_feature_request_update_with_existing_client_and_priority(self):
 
