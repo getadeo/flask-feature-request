@@ -3,3 +3,4 @@
 .vscode/
 Pipfile.lock
 feature_requests/db/test.db
+feature_requests/db/app.db

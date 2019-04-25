@@ -1,4 +1,5 @@
 import unittest
+import json
 
 import requests
 from flask_testing import LiveServerTestCase
@@ -48,6 +49,156 @@ class FeatureRequestTestAPI(LiveServerTestCase):
             "Root API Endpoint Should Response 200 Status Code"
         )
 
+    def test_api_feature_request_post(self):
+
+        endpoint = self.get_server_url() + "/api/feature_requests"
+
+        payload = {
+            "title": "Test Title 1",
+            "description": "Test Description 1",
+            "priority": 1,
+            "client_id": 1,
+            "target_date": "2019-04-28",
+            "product_area_id": 1
+
+        }
+
+        r = requests.post(endpoint, json=payload)
+
+        response_data = r.json()
+
+        self.assertEqual(
+            r.status_code,
+            201,
+            "Post request should return 201"
+        )
+
+        self.assertEqual(
+            response_data['message'],
+            "created",
+            "JSON reponse message should be 'created'"
+        )
+
+        self.assertEqual(
+            'featureRequestData' in response_data,
+            True,
+            "featureRequestData Object should be present"
+        )
+
+        self.assertEqual(
+            'id' in response_data['featureRequestData'],
+            True,
+            "JSON response id should be present"
+        )
+
+    def test_api_feature_requests_get(self):
+
+        endpoint = self.get_server_url() + "/api/feature_requests"
+
+        first_payload = {
+            "title": "Test Title 1",
+            "description": "Test Description 1",
+            "priority": 1,
+            "client_id": 1,
+            "target_date": "2019-04-28",
+            "product_area_id": 1
+
+        }
+
+        r = requests.post(endpoint, json=first_payload)
+
+        response_data = r.json()
+
+        second_payload = {
+            "title": "Test Title 1",
+            "description": "Test Description 1",
+            "priority": 1,
+            "client_id": 1,
+            "target_date": "2019-04-28",
+            "product_area_id": 1
+
+        }
+
+        r2 = requests.post(endpoint, json=second_payload)
+
+        response_data = r2.json()
+
+        get_frs = requests.get(endpoint)
+        frs = get_frs.json()
+
+        self.assertEqual(
+            'featureRequests' in frs,
+            True,
+            "featureRequests JSON object should be present"
+        )
+
+        self.assertEqual(
+            len(frs['featureRequests']),
+            2,
+            "featureRequests JSON object length must be 2"
+        )
+
+        self.assertEqual(
+            get_frs.status_code,
+            200,
+            "featureRequests request should return 200"
+        )
+
+    def test_api_feature_requests_get_via_id(self):
+
+        endpoint = self.get_server_url() + "/api/feature_requests"
+
+        payload = {
+            "title": "Test Title 1",
+            "description": "Test Description 1",
+            "priority": 1,
+            "client_id": 1,
+            "target_date": "2019-04-28",
+            "product_area_id": 1
+
+        }
+
+        r = requests.post(endpoint, json=payload)
+
+        response_data = r.json()['featureRequestData']
+
+        get_fr = requests.get(endpoint + "/" + str(response_data['id']))
+
+        fr_data = get_fr.json()
+
+        self.assertEqual(
+            get_fr.status_code,
+            200,
+            "Feature Request via ID should return 200"
+        )
+
+        self.assertEqual(
+            fr_data['featureRequestData']['title'],
+            payload['title'],
+            "Feature Request response title should" \
+                " be equal to fixture title payload"
+        )
+
+def test_api_feature_requests_get_via_id_not_found(self):
+
+        endpoint = self.get_server_url() + "/api/feature_requests"
+
+        get_fr = requests.get(endpoint + "/100")
+
+        fr_data = get_fr.json()
+
+        self.assertEqual(
+            get_fr.status_code,
+            404,
+            "Feature Request via ID should return 404"
+        )
+
+        self.assertEqual(
+            fr_data['featureRequestData']['title'],
+            payload['title'],
+            "Feature Request response message should" \
+                "return 'Feature Request not found'"
+        )
 
 if __name__ == '__main__':
     unittest.main()

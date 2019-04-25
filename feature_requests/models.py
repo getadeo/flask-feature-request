@@ -90,6 +90,21 @@ class FeatureRequest(db.Model):
 
         return fr
 
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "created_at": self.created_at,
+            "priority": self.priority,
+            "target_date": self.target_date,
+            "client_id": self.client_id,
+            "client": self.client.name,
+            "product_area_id": self.product_area_id,
+            "product_area": self.product_area.name,
+    }
+    
 class Client(db.Model):
 
     __tablename__ = 'clients'
