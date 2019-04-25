@@ -275,5 +275,52 @@ class FeatureRequestTestAPI(LiveServerTestCase):
         )
 
 
+    def test_api_feature_requests_delete_via_id_not_found(self):
+
+        endpoint = self.get_server_url() + "/api/feature_requests"
+
+        r = requests.delete(endpoint + "/100")
+
+        self.assertEqual(
+            r.json()['message'],
+            "Feature Request not found",
+            "Feature Delete request should response 'Feature Request not found'"
+        )
+
+    def test_api_feature_request_delete_via_id(self):
+
+        endpoint = self.get_server_url() + "/api/feature_requests"
+
+
+        existing_payload = {
+            "title": "Test Title 1",
+            "description": "Test Description 1",
+            "priority": 1,
+            "client_id": 1,
+            "target_date": "2019-04-28",
+            "product_area_id": 1
+
+        }
+
+        r = requests.post(endpoint, json=existing_payload)
+
+        response_data = r.json()['featureRequestData']
+        
+        r2 = requests.delete(endpoint + "/" + str(response_data['id']))
+
+        self.assertEqual(
+            r2.status_code,
+            200,
+            "Delete feature request should return 200"
+        )
+
+        self.assertEqual(
+            r2.json()['message'],
+            "deleted",
+            "Delete feature message should return 'deleted'"
+        )
+
+
+
 if __name__ == '__main__':
     unittest.main()

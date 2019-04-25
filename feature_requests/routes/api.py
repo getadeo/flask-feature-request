@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask import Blueprint, request, jsonify
 
-from feature_requests.models import FeatureRequest
+from feature_requests.models import FeatureRequest, db
 
 bp = Blueprint('api', __name__)
 
@@ -11,7 +11,7 @@ def index():
     return 'from api'
 
 
-@bp.route('/feature_requests', methods=['GET', 'POST', 'DELETE'])
+@bp.route('/feature_requests', methods=['GET', 'POST'])
 def feature_request_resource():
 
     if request.method == 'GET':
@@ -46,7 +46,7 @@ def feature_request_resource():
 
         return 'DELETE'
 
-@bp.route('/feature_requests/<id>', methods=['GET', 'PATCH'])
+@bp.route('/feature_requests/<id>', methods=['GET', 'PATCH', 'DELETE'])
 def feature_request_resource_via_id(id):
 
     if request.method == 'GET':
@@ -67,7 +67,7 @@ def feature_request_resource_via_id(id):
         # * Target date convert to datetime object before saving
         data['target_date'] = datetime.strptime(data['target_date'], '%Y-%m-%d')
 
-        # * Adds ID to data
+        # * Add ID to data
         data['id'] = id
 
         fr = FeatureRequest.edit(**data)
@@ -81,3 +81,15 @@ def feature_request_resource_via_id(id):
         }
 
         return jsonify(resp_data), 200
+
+    if request.method == 'DELETE':
+
+        fr = FeatureRequest.query.filter_by(id=id).first()
+
+        if fr is None:
+            return jsonify({"message": "Feature Request not found"}), 404
+
+        db.session.delete(fr)
+        db.session.commit()
+
+        return jsonify({"message": "deleted"})
